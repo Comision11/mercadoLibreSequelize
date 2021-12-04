@@ -1,29 +1,55 @@
-const fs = require('fs');
-const path = require('path');
-
-const productsFilePath = path.join(__dirname, '../data/productsDataBase.json');
-const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
+const db = require('../database/models');
+const {Op} = require('sequelize');
 
 const toThousand = require('../utils/toThousand');
 const finalPrice = require('../utils/finalPrice');
 
 const controller = {
 	index: (req, res) => {
-		return res.render('index',{
-			products,
-			toThousand,
-			finalPrice
+
+		db.Product.findAll({
+			include: [{ all: true }]
 		})
+			.then(products => {
+				return res.render('index', {
+					products,
+					toThousand,
+					finalPrice
+				})
+			})
+			.catch(error => console.log(error))
 	},
 	search: (req, res) => {
-		let result = products.filter(product => product.name.toLowerCase().includes(req.query.keywords.toLowerCase().trim()));
-		return res.render('results',{
-			products : result,
-			toThousand,
-			finalPrice,
-			busqueda : req.query.keywords.trim()
-		})
 
+		db.Product.findAll({
+			include : [{all:true}],
+			where :{
+				[Op.or] : [
+					{
+						name : {
+							[Op.substring] : req.query.keywords.trim()
+						}
+					},
+					{
+						description : {
+							[Op.substring] : req.query.keywords.trim()
+						}
+					}
+				]
+			}
+		})
+			.then(products => {
+				return res.render('results', {
+					products,
+					toThousand,
+					finalPrice,
+					busqueda: req.query.keywords.trim()
+				})
+		
+			})
+			.catch(error =>console.log(error))
+		
+	
 	},
 };
 
