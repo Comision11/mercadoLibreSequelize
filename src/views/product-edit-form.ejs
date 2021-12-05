@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <!-- Include Head -->
-<%- include('partials/head', {title: 'Editando: ' + product.name}) %>
+<%- include('partials/head', {title: 'Formulario de edición'}) %>
 <body>
 	<!-- Header -->
 	<%- include('partials/headerNavbar') %>
@@ -10,37 +10,62 @@
 	<div class="container products-wrapper">
 		<div class="row">
 			<div class="col-12">
-				<h2 class="products-title">Estás editando: <i><%= product.name %> </i></h2>
+				<h2 class="products-title">Formulario de edición de productos</h2>
 			</div>
 		</div>
 		<div class="col-12">
-			<form action="/products/edit/<%= product.id %>?_method=PUT" method="POST">
+			<form action="/products/edit/<%= product.id %>?_method=PUT " method="POST" >
 				<div class="row product-detail">
 					<div class="col-12 col-md-6">
-						<label for="name" class="form-label">Nombre del producto:</label>
+						<label for="name" class="form-label">Nombre del producto: </label>
 						<input type="text" id="name" name="name" placeholder="Ej: Zapatillas Reebok" class="form-input" value="<%= product.name %>">
 					</div>
 					<div class="col-12 col-md-6">
 						<label for="price" class="form-label">Precio del producto:</label>
-						<input type="number" id="price" name="price" placeholder="Ej: 5678" class="form-input" value=<%= product.price %> >
+						<input type="number" id="price" name="price" placeholder="Ej: 5678" class="form-input" value="<%= product.price %>">
 					</div>
-					<div class="col-12 col-md-6">
+					<div class="col-12 col-md-4">
 						<label for="discount" class="form-label">Descuento:</label>
-						<input type="number" id="discount" name="discount" placeholder="Ej: 15" class="form-input" value=<%= product.discount %>>
+						<input type="number" id="discount" name="discount" placeholder="Ej: 15" class="form-input" value="<%= product.discount %>">
 					</div>
-					<div class="col-12 col-md-6">
+					<div class="col-12 col-md-4">
 						<label for="category" class="form-label">Categoría:</label>
 						<select name="category" id="category" class="form-input">
-							<option <%= product.category === "in-sale" ? 'selected' : null %>  value="in-sale">En oferta</option>
-							<option <%= product.category === "visited" ? 'selected' : null %>  value="visited" >Últimos agregados</option>
+							<% categories.forEach(category => { %>
+								<option <%= product.categoryId == category.id && 'selected' %>  value="<%= category.id %>"><%= category.name %> </option>
+							<% }) %>
 						</select>
 					</div>
-					<div class="col-12">
-						<label for="description" class="form-label">Descripción:</label>
-						<textarea name="description" id="description" class="form-input"><%= product.description %> </textarea>
+					<div class="col-12 col-md-4">
+						<label for="section" class="form-label">Sección:</label>
+						<select name="section" id="section" class="form-input">
+							<% sections.forEach(section => { %>
+								<option <%= product.sectionId == section.id && 'selected' %>  value="<%= section.id %>"><%= section.name %> </option>
+							<% }) %>
+						</select>
 					</div>
-					<div class="col-12">
-						<button type="submit" class="buy-now-button">Guardar producto</button>
+					<div class="col-12 col-md-6">
+						<label for="description" class="form-label">Descipción:</label>
+						<textarea name="description" id="description" class="form-input"><%= product.description %></textarea>
+					</div>
+					<div class="col-12 col-md-6">
+						<div class="row mt-5 g-2" id="preview">
+							<% product.images.forEach((image,index) => { %>
+							  <div class="col-6 text-center" >
+								<img width="200" src="/images/products/<%= image.file %>" alt="">
+								  <div >
+									<a onclick="deleteImage('<%=image.id%>')" class="btn btn-danger ">Eliminar</a>
+								  </div>
+							  </div>
+							<% }) %>
+						  </div>
+					</div>
+					<div class="col-12 col-md-6">
+						<label for="images" class="buy-now-button">Agregar imágenes</label>
+						<input hidden type="file" id="images" name="images" class="form-input" multiple onchange="addImage('<%=product.id%>',this.files)">
+					</div>
+					<div class="col-12 col-md-6">
+						<button type="submit" class="buy-now-button mt-3">Guardar los cambios</button>
 					</div>
 				</div>
 			</form>
@@ -52,5 +77,6 @@
 	<!-- footer -->
 	<%- include('partials/footer') %>
 	<!-- /footer -->
+	<script src="/js/editProduct.js"></script>
 </body>	
 </html>

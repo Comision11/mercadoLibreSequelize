@@ -6,13 +6,28 @@ const finalPrice = require('../utils/finalPrice');
 
 const controller = {
 	index: (req, res) => {
-
-		db.Product.findAll({
-			include: [{ all: true }]
+		let novedades = db.Section.findByPk(1, {
+			include: [
+				{ 
+					association: 'products',
+					include: [{ all: true }]
+				}
+			]
 		})
-			.then(products => {
+		let ofertas = db.Section.findByPk(2, {
+			include: [
+				{ 
+					association: 'products',
+					include: [{ all: true }]
+				}
+			]
+		})
+
+		Promise.all([novedades,ofertas])
+			.then(([novedades,ofertas]) => {
 				return res.render('index', {
-					products,
+					novedades : novedades.products,
+					ofertas,
 					toThousand,
 					finalPrice
 				})

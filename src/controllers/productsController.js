@@ -95,34 +95,57 @@ const controller = {
 
 	// Update - Form to edit
 	edit: (req, res) => {
-		let product = products.find(product => product.id === +req.params.id);
-		return res.render('product-edit-form',{
-			product
+		const categories = db.Category.findAll();
+		const sections = db.Section.findAll();
+		const product = db.Product.findByPk(req.params.id,{
+			include : [{all:true}]
 		})
+
+		Promise.all([categories, sections, product])
+			.then(([categories,sections, product]) => {
+				return res.render('product-edit-form',{
+					categories,
+					sections,
+					product
+				})
+			})
+			.catch(error => console.log(error))
+
 	},
 	// Update - Method to update
 	update: (req, res) => {
-		const {name, price, discount, category, description} = req.body;
+		const {name, price, discount, description, category, section} = req.body;
 
-		products.map(product => {
-			if(product.id === +req.params.id){
-				product.name = name;
-				product.price = +price;
-				product.discount = +discount;
-				product.category = category;
-				product.description = description;
+		db.Product.update(
+			{
+				name : name.trim(),
+				price,
+				discount,
+				description: description.trim(),
+				categoryId : category,
+				sectionId : section
+			},
+			{
+				where : {
+					id : req.params.id
+				}
 			}
-		})
-		
-		fs.writeFileSync(productsFilePath,JSON.stringify(products,null,2),'utf-8');
-		res.redirect('/products')
+		)
+			.then( () => {
+				return res.redirect('/products/detail/' + req.params.id)
+			})
+
+	
 	},
 
 	// Delete - Delete one product from DB
 	destroy : (req, res) => {
-		let productsModify = products.filter(product => product.id !== +req.params.id);
-		fs.writeFileSync(productsFilePath,JSON.stringify(productsModify,null,2),'utf-8');
-		res.redirect('/products')
+		db.Product.destroy({
+            where : {
+                id : req.params.id
+            }
+        }).then( () => res.redirect('/products'))
+        .catch(error => console.log(error))
 	}
 };
 

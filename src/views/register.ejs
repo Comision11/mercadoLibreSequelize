@@ -15,25 +15,19 @@
 				<h2 class="products-title">Formulario de Registro</h2>
 			</div>
 		<div class="col-12 product-detail py-4">
-      <form id="register" action="" method="POST" enctype="multipart/form-data">
+      <form id="register" action="" method="POST">
 
         <div class="row ">
 
           <div class="form-group col-12 ">
             <label for="nombre"></label>
             <input type="text"
-            class="form-input" <%= (typeof old != 'undefined' && old.nombre)?"is-valid":(typeof errors != 'undefined' && errors.nombre)?"is-invalid": ""  %>"
+            class="form-input <%= (typeof old != 'undefined' && old.nombre)?"is-valid":(typeof errors != 'undefined' && errors.nombre)?"is-invalid": ""  %>"
             id="nombre"  name="nombre"  value="<%= (typeof old != 'undefined' && old.nombre)?old.nombre:'' %>" placeholder="nombre" title="El nombre debe tener más de dos caracteres"/>
             <small id="errorNombre" class="text-danger"><%= (typeof errors != 'undefined' && errors.nombre)?errors.nombre.msg: "" %> </small>
           </div>
 
-          <div class="form-group col-12 ">
-            <label for="apellido"></label>
-            <input type="text"
-            class="form-input" <%= (typeof old != 'undefined' && old.apellido)?"is-valid":(typeof errors != 'undefined' && errors.apellido)?"is-invalid": ""  %>"
-            id="apellido" value="<%= (typeof old != 'undefined' && old.apellido)?old.apellido:'' %>" placeholder="apellido" name="apellido" title="El apellido debe tener más de dos caracteres"/>
-            <small id="errorApellido" class="text-danger"><%= (typeof errors != 'undefined' && errors.apellido)?errors.apellido.msg: "" %> </small>
-          </div>
+         
 
         </div>
 
@@ -42,7 +36,7 @@
           <div class="form-group col-12 ">
             <label for="email"></label>
             <input type="email"
-            class="form-input" <%= (typeof old != 'undefined' && old.email && !errors.email)?"is-valid":(typeof errors != 'undefined' && errors.email)?"is-invalid": ""  %>"
+            class="form-input <%= (typeof old != 'undefined' && old.email && !errors.email)?"is-valid":(typeof errors != 'undefined' && errors.email)?"is-invalid": ""  %>"
             id="email" value="<%= (typeof old != 'undefined' && old.email)?old.email:'' %>" placeholder="email" name="email"/>
             <small id="errorEmail" class="text-danger"><%= (typeof errors != 'undefined' && errors.email)?errors.email.msg: "" %> </small>
           </div>
@@ -51,7 +45,7 @@
           <div class="form-group col-12">
             <label for="pass"></label>
             <input type="password"
-            class="form-input" <%= (typeof errors != 'undefined' && errors.pass)?"is-invalid": ""  %>"
+            class="form-input <%= (typeof errors != 'undefined' && errors.pass)?"is-invalid": ""  %>"
             id="pass" placeholder="contraseña" name="pass"/>
             <small id="errorPass" class="text-danger"><%= (typeof errors != 'undefined' && errors.pass)?errors.pass.msg: "" %> </small>
           </div>

@@ -36,9 +36,18 @@
 			</ul>
 
 			<ul class="right-navbar">
+				<% if (locals.userLogin) { %>
+					<div class="d-flex flex-column w-25">
+						<img class="img-fluid w-25" src="/images/users/<%= userLogin.avatar %>" alt="avatar">
+						<a href="/users/profile"><%= userLogin.name %> </a>
+						<a href="/users/logout">Cerrar sesión</a>
+					</div>
+					<li><a href="#">Mis compras <i class="fas fa-shopping-basket"></i></a></li>
+
+				<% }else{ %>
 				<li><a href="/users/register">Creá tu cuenta <i class="far fa-address-card"></i></a></li>
 				<li><a href="/users/login">Ingresá <i class="fas fa-sign-in-alt"></i></a></li>
-				<li><a href="#">Mis compras <i class="fas fa-shopping-basket"></i></a></li>
+				<% } %>
 			</ul>
 		</nav>
 	</div>
